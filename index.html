@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background: url('https://example.com/background-image.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            margin: 0 auto;
+        }
+        .password-display {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 20px;
+            margin-top: 30px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="glass-card">
+        <h4 class="center-align">Password Generator</h4>
+        <form id="userForm">
+            <div class="input-field">
+                <input type="text" name="name" id="name" required>
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field">
+                <select name="gender" id="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+                <label>Gender</label>
+            </div>
+            <div class="input-field">
+                <input type="number" name="age" id="age" required>
+                <label for="age">Age</label>
+            </div>
+            <div class="input-field">
+                <input type="tel" name="phone" id="phone" required>
+                <label for="phone">Phone Number</label>
+            </div>
+            <div class="input-field">
+                <input type="email" name="email" id="email" required>
+                <label for="email">Email</label>
+            </div>
+            <div class="center-align">
+                <button type="submit" class="btn waves-effect waves-light">Generate Password</button>
+            </div>
+        </form>
+    </div>
+    <div class="password-display">
+        <h5 class="center-align">Generated Password:</h5>
+        <p id="result" class="center-align"></p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('select').formSelect();
+
+        $('#userForm').submit(function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: 'generate_password.php',
+                data: formData,
+                success: function(response) {
+                    $('#userForm').fadeOut(500, function() {
+                        $('#result').text(response);
+                        $('.password-display').fadeIn(500);
+                        setTimeout(function() {
+                            $('#userForm').trigger('reset');
+                            $('#userForm').fadeIn(500);
+                            $('.password-display').fadeOut(500);
+                        }, 5000);
+                    });
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
